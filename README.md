@@ -61,6 +61,8 @@ migrations/           # SQL schema migration files
 scripts/              # Migration and seed runners
 seeds/                # Seed SQL
 socket-server.js      # Separate Socket.IO server
+Dockerfile            # Production container image definition
+docker-entrypoint.sh  # Starts Next.js and Socket.IO together
 ```
 
 ## Prerequisites
@@ -76,6 +78,10 @@ Recommended:
 
 - Node.js 20+
 - PostgreSQL 14+
+
+Optional:
+
+- Docker
 
 ## Environment Variables
 
@@ -293,6 +299,58 @@ npm run start
 npm run socket
 ```
 
+## Docker Run Guide
+
+The repository includes a production `Dockerfile` that starts both the Next.js app and the Socket.IO server in one container.
+
+### 1. Create the environment file
+
+Make sure `.env` exists and contains your production or local database credentials.
+
+```bash
+cp .env.example .env
+```
+
+### 2. Build the Docker image
+
+```bash
+docker build -t fitfirst .
+```
+
+### 3. Run database migrations
+
+Run migrations against your PostgreSQL database before starting the app container.
+
+```bash
+docker run --rm --env-file .env fitfirst npm run db:migrate
+```
+
+### 4. Seed the database
+
+This step is optional if you already have data.
+
+```bash
+docker run --rm --env-file .env fitfirst npm run db:seed
+```
+
+### 5. Start the container
+
+```bash
+docker run --env-file .env -p 3000:3000 -p 4001:4001 fitfirst
+```
+
+The app will be available at:
+
+```bash
+http://localhost:3000
+```
+
+The socket server will be available at:
+
+```bash
+http://localhost:4001
+```
+
 ## Helpful Scripts
 
 ```bash
@@ -323,6 +381,7 @@ Check:
 - the database exists
 - `DB_URL` is correct
 - your PostgreSQL user has permission to connect
+- if using Docker, the database host in `DB_URL` is reachable from the container
 
 ### Socket updates do not appear
 
@@ -332,6 +391,7 @@ Check:
 - `SOCKET_URL` matches the socket server
 - `NEXT_PUBLIC_SOCKET_URL` matches the socket server
 - `SOCKET_SERVER_SECRET` is the same everywhere
+- if using Docker, port `4001` is exposed and mapped correctly
 
 ### Login does not work after seed
 

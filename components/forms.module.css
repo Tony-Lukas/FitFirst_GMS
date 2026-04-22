@@ -1,0 +1,18 @@
+.authWrap {
+  width: min(520px, calc(100% - 32px));
+  margin: 40px auto;
+}
+
+.helper {
+  margin-top: 16px;
+  color: var(--muted);
+  line-height: 1.6;
+}
+
+.helper a {
+  color: #86efac;
+}
+
+.helper a:hover {
+  color: #f97316;
+}

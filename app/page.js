@@ -20,10 +20,10 @@ export default function HomePage() {
               track members, update manual payments, and watch the dashboard update in real time.
             </p>
             <div style={{ display: "flex", gap: 12, flexWrap: "wrap", marginTop: 22 }}>
-              <Link className="button" href={user ? (user.role === "owner" ? "/owner" : "/profile") : "/register"}>
+              <Link className="btn btn-primary" href={user ? (user.role === "owner" ? "/owner" : "/profile") : "/register"}>
                 {user ? "Open Dashboard" : "Create Account"}
               </Link>
-              <Link className="buttonGhost" href="/plans">
+              <Link className="btn btn-primary" href="/plans">
                 Browse Plans
               </Link>
             </div>
@@ -32,22 +32,26 @@ export default function HomePage() {
 
         <div className="panel">
           <div className="panelInner">
-            <div className="gridTwo">
-              <div>
-                <div className="muted">Auth</div>
-                <div className="statValue">JWT</div>
+            <div className="system-core-header">
+              <span className="live-indicator"></span>
+              <span className="formLabel">System Core</span>
+            </div>
+            <div className="stat-grid">
+              <div className="stat-card">
+                <div className="stat-label">Auth</div>
+                <div className="stat-value">JWT</div>
               </div>
-              <div>
-                <div className="muted">Database</div>
-                <div className="statValue">Postgres</div>
+              <div className="stat-card">
+                <div className="stat-label">Database</div>
+                <div className="stat-value">Postgres</div>
               </div>
-              <div>
-                <div className="muted">Realtime</div>
-                <div className="statValue">Sockets</div>
+              <div className="stat-card">
+                <div className="stat-label">Realtime</div>
+                <div className="stat-value">Sockets</div>
               </div>
-              <div>
-                <div className="muted">Roles</div>
-                <div className="statValue">2</div>
+              <div className="stat-card">
+                <div className="stat-label">Roles</div>
+                <div className="stat-value">2</div>
               </div>
             </div>
           </div>
@@ -59,18 +63,22 @@ export default function HomePage() {
           {
             title: "Owner tools",
             text: "Create plans, inspect members, update payment status, and watch the current gym floor count.",
+            icon: "⚡"
           },
           {
             title: "Customer flow",
             text: "Register, view available plans, subscribe, check in, check out, and review payment history.",
+            icon: "👤"
           },
           {
             title: "Database-first",
             text: "Includes SQL migration and seed scripts for a known owner account and sample plans.",
+            icon: "📂"
           },
         ].map((item) => (
           <article key={item.title} className="panel">
             <div className="panelInner">
+              <div style={{ fontSize: '1.5rem', marginBottom: '12px' }}>{item.icon}</div>
               <h2 className="sectionTitle">{item.title}</h2>
               <p className="muted">{item.text}</p>
             </div>

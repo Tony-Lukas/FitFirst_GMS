@@ -22,6 +22,8 @@ function OwnerPageContent() {
   const [editingPlanId, setEditingPlanId] = useState(null);
   const [message, setMessage] = useState("");
   const [error, setError] = useState("");
+  const [toastMessage, setToastMessage] = useState("");
+  const [toastKey, setToastKey] = useState(0);
   const [searchQuery, setSearchQuery] = useState("");
 
   const loadAll = useCallback(async () => {
@@ -148,12 +150,22 @@ function OwnerPageContent() {
         token,
         body: { paid, notes },
       });
-      setMessage("Payment updated.");
+      setToastMessage("Updated payment!");
+      setToastKey((prev) => prev + 1);
       await loadAll();
     } catch (paymentError) {
       setError(paymentError.message);
     }
   }
+
+  useEffect(() => {
+    if (toastMessage) {
+      const timer = setTimeout(() => {
+        setToastMessage("");
+      }, 3000);
+      return () => clearTimeout(timer);
+    }
+  }, [toastMessage, toastKey]);
 
   const filteredMembers = members.filter((member) => {
     const query = searchQuery.toLowerCase();
@@ -375,6 +387,7 @@ function OwnerPageContent() {
           </div>
         </div>
       </section>
+      {toastMessage && <div key={toastKey} className="toast">{toastMessage}</div>}
     </main>
   );
 }

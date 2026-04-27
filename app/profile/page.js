@@ -92,6 +92,22 @@ function ProfileContent() {
     }
   }
 
+  async function handleCancelSubscription(subscriptionId) {
+    setFeedback("");
+    setError("");
+
+    try {
+      await apiRequest(`/api/subscriptions/${subscriptionId}/cancel`, {
+        method: "PUT",
+        token,
+      });
+      setFeedback("Subscription cancelled successfully.");
+      await loadData();
+    } catch (requestError) {
+      setError(requestError.message);
+    }
+  }
+
   const payments = subscriptions.flatMap((subscription) => subscription.payments || []);
 
   return (
@@ -156,6 +172,15 @@ function ProfileContent() {
                     <p className={getStatusClass(subscription.computed_status)}>
                       {subscription.computed_status}
                     </p>
+                    {subscription.computed_status === "active" && (
+                      <button
+                        className="buttonDanger"
+                        onClick={() => handleCancelSubscription(subscription.id)}
+                        style={{ marginTop: 10 }}
+                      >
+                        Cancel Subscription
+                      </button>
+                    )}
                   </article>
                 ))
               ) : (

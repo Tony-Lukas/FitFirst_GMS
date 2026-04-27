@@ -163,6 +163,22 @@ function OwnerPageContent() {
     );
   });
 
+  async function handleCancelSubscription(subscriptionId) {
+    setMessage("");
+    setError("");
+
+    try {
+      await apiRequest(`/api/subscriptions/${subscriptionId}/cancel`, {
+        method: "PUT",
+        token,
+      });
+      setMessage("Subscription cancelled.");
+      await loadAll();
+    } catch (cancelError) {
+      setError(cancelError.message);
+    }
+  }
+
   return (
     <main className="page">
       <section className="hero">
@@ -321,6 +337,14 @@ function OwnerPageContent() {
                             >
                               Add Payment
                             </button>
+                            {subscription.computed_status === "active" && (
+                              <button
+                                className="buttonDanger"
+                                onClick={() => handleCancelSubscription(subscription.id)}
+                              >
+                                Cancel Subscription
+                              </button>
+                            )}
                           </div>
                           <div className="cardList">
                             {(subscription.payments || []).length ? (

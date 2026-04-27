@@ -297,7 +297,7 @@ function OwnerPageContent() {
                 <div className="empty" key={plan.id}>
                   <strong>{plan.name}</strong>
                   <p className="muted">
-                    {plan.duration_days} days • ${(plan.price_cents / 100).toFixed(2)}
+                    {plan.duration_days} days • {plan.price_cents } THB
                   </p>
                   <p className="muted">{plan.description}</p>
                   <div style={{ display: "flex", gap: 10, flexWrap: "wrap", marginTop: 10 }}>

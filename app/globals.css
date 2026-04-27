@@ -20,10 +20,10 @@
   --focus-ring: 0 0 0 3px rgba(132, 204, 22, 0.3);
   
   /* Radius */
-  --radius-sm: 4px;
-  --radius-md: 12px;
-  --radius-lg: 16px;
-  --radius-xl: 20px;
+  --radius-sm: 8px;
+  --radius-md: 16px;
+  --radius-lg: 20px;
+  --radius-xl: 24px;
 }
 
 *,
@@ -160,6 +160,15 @@ main {
 .buttonGhost {
   background: var(--primary);
   color: var(--primary-foreground);
+  border-radius: var(--radius-md);
+  padding: 12px 28px;
+  transition: all 0.2s ease;
+}
+
+.button:hover,
+.buttonGhost:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(132, 204, 22, 0.3);
 }
 
 .btn-ghost:hover {
@@ -168,10 +177,19 @@ main {
   border-color: var(--primary);
 }
 
-.btn-danger {
+.btn-danger,
+.buttonDanger {
   background: var(--accent);
   color: #ffffff;
   border-color: var(--accent);
+  border-radius: var(--radius-md);
+  padding: 12px 28px;
+  transition: all 0.2s ease;
+}
+
+.buttonDanger:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(239, 68, 68, 0.3);
 }
 
 .btn-sm {
@@ -226,13 +244,14 @@ main {
   background: var(--surface-soft);
   color: var(--foreground);
   font-size: 14px;
-  transition: border-color 0.15s ease, box-shadow 0.15s ease;
+  transition: all 0.2s ease;
   outline: none;
 }
 
-.input::placeholder,
-.textarea::placeholder {
-  color: #64748b;
+.input:hover,
+.select:hover,
+.textarea:hover {
+  border-color: rgba(255, 255, 255, 0.2);
 }
 
 .input:focus,
@@ -240,6 +259,27 @@ main {
 .textarea:focus {
   border-color: var(--primary);
   box-shadow: var(--focus-ring);
+  transform: translateY(-1px);
+}
+
+.select {
+  cursor: pointer;
+  appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%23a3a3a3' d='M6 8L1 3h10z'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 12px center;
+  padding-right: 36px;
+}
+
+.select:hover {
+  border-color: rgba(255, 255, 255, 0.3);
+  background-color: var(--surface);
+}
+
+.select option {
+  background: var(--surface);
+  color: var(--foreground);
+  padding: 8px;
 }
 
 .textarea {
@@ -526,6 +566,78 @@ tr:hover td {
   10% { opacity: 1; transform: translate(-50%, -50%); }
   90% { opacity: 1; transform: translate(-50%, -50%); }
   100% { opacity: 0; transform: translate(-50%, calc(-50% - 20px)); }
+}
+
+/* ─── Modal Animation ────────────────────── */
+
+.modalOverlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.7);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 9999;
+  animation: fadeIn 0.2s ease;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+.modalContent {
+  background: var(--surface);
+  padding: 24px;
+  border-radius: var(--radius-lg);
+  max-width: 400px;
+  width: 90%;
+  animation: modalPop 0.3s ease;
+}
+
+@keyframes modalPop {
+  0% { opacity: 0; transform: scale(0.9); }
+  100% { opacity: 1; transform: scale(1); }
+}
+
+.modalContent h3 {
+  margin: 0 0 12px;
+  font-size: 20px;
+}
+
+.modalContent p {
+  color: var(--muted);
+  margin: 0 0 20px;
+  line-height: 1.5;
+}
+
+.modalActions {
+  display: flex;
+  gap: 12px;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.cancelSuccessIcon {
+  width: 60px;
+  height: 60px;
+  background: var(--accent);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 32px;
+  margin: 0 auto 16px;
+  animation: successPop 0.4s ease;
+}
+
+@keyframes successPop {
+  0% { transform: scale(0); }
+  50% { transform: scale(1.2); }
+  100% { transform: scale(1); }
 }
 
 /* ─── Responsive ─────────────────────────── */

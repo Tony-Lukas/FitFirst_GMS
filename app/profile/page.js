@@ -197,7 +197,7 @@ function ProfileContent() {
               {payments.length ? (
                 payments.map((payment) => (
                   <article key={payment.id} className="empty">
-                    <strong>${(payment.amount_cents / 100).toFixed(2)}</strong>
+                    <strong>{payment.amount_cents} THB</strong>
                     <p className="muted">
                       {payment.method || "manual"} {payment.paid_at ? `• ${payment.paid_at}` : ""}
                     </p>

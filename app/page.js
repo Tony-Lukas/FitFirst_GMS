@@ -30,7 +30,7 @@ export default function HomePage() {
       <section className="hero">
         <div className="panel">
           <div className="panelInner">
-            <span className="pill">Student-friendly, full-stack, minimal</span>
+            <span className="pill">full-stack, minimal</span>
             <h1 style={{ fontSize: "clamp(2.4rem, 5vw, 4.6rem)", margin: "16px 0 14px" }}>
               FitFirst keeps plans, payments, and live check-ins in one place.
             </h1>

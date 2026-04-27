@@ -277,7 +277,7 @@ function OwnerPageContent() {
                 />
                 <input
                   className="input"
-                  placeholder="Price cents"
+                  placeholder="Price THB"
                   value={planForm.price_cents}
                   onChange={(event) => setPlanForm({ ...planForm, price_cents: event.target.value })}
                 />
@@ -438,7 +438,7 @@ function PaymentEditor({ payment, onSave }) {
 
   return (
     <div className="empty">
-      <strong>${(payment.amount_cents / 100).toFixed(2)}</strong>
+      <strong>{payment.amount_cents} THB</strong>
       <p className="muted">{payment.method || "manual"}</p>
       <div className="formGrid" style={{ marginTop: 10 }}>
         <select

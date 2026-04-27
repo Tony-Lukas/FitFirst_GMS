@@ -205,13 +205,13 @@ After seeding, you can use these accounts:
 
 ### Owner
 
-- Email: `owner@fitfirst.local`
-- Password: `owner123`
+- Email: `admin@fitfirst.gym`
+- Password: `ffadmin`
 
 ### Customer
 
-- Email: `customer@fitfirst.local`
-- Password: `customer123`
+- Email: `customer@fitfirst.gym`
+- Password: `ffuser`
 
 ## How to Use the System
 

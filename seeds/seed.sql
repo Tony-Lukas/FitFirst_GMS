@@ -1,7 +1,7 @@
 INSERT INTO users (name, email, password_hash, role)
 VALUES
-  ('FitFirst Owner', 'owner@fitfirst.local', '$2b$10$Ic2PboOAm7NQB0P.yrRmRufkOThV6V1f2WW5Kk1xmagvpUrnWxt1K', 'owner'),
-  ('Sample Customer', 'customer@fitfirst.local', '$2b$10$Ak4aahK5liWmrvyuyzOWe.aGdKfG8FgdvYmSf/Nfk1NNLHbn0xaji', 'customer')
+  ('FitFirst Owner', 'admin@fitfirst.gym', '$2a$10$DEwFhzBiRvVUPSCjrgBW1eM3pbzxED0kWvxJbLaxhTrtQiQXpdxHq', 'owner'),
+  ('FitFirst Customer', 'customer@fitfirst.gym', '$2a$10$8cAZiAEPJgGrLRVQZvRv3.vDG4HmE6z31q7oPt/eD/gr.COrY0OnC', 'customer')
 ON CONFLICT (email) DO UPDATE
 SET name = EXCLUDED.name,
     password_hash = EXCLUDED.password_hash,

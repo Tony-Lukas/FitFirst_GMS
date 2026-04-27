@@ -22,6 +22,7 @@ function OwnerPageContent() {
   const [editingPlanId, setEditingPlanId] = useState(null);
   const [message, setMessage] = useState("");
   const [error, setError] = useState("");
+  const [searchQuery, setSearchQuery] = useState("");
 
   const loadAll = useCallback(async () => {
     try {
@@ -154,6 +155,14 @@ function OwnerPageContent() {
     }
   }
 
+  const filteredMembers = members.filter((member) => {
+    const query = searchQuery.toLowerCase();
+    return (
+      member.name.toLowerCase().includes(query) ||
+      member.email.toLowerCase().includes(query)
+    );
+  });
+
   return (
     <main className="page">
       <section className="hero">
@@ -281,9 +290,16 @@ function OwnerPageContent() {
       <section className="panel" style={{ marginTop: 22 }}>
         <div className="panelInner">
           <h2 className="sectionTitle">Members, subscriptions, and payments</h2>
+          <input
+            className="input"
+            placeholder="Search customers by name or email..."
+            value={searchQuery}
+            onChange={(event) => setSearchQuery(event.target.value)}
+            style={{ marginBottom: 16 }}
+          />
           <div className="cardList">
-            {members.length ? (
-              members.map((member) => (
+            {filteredMembers.length ? (
+              filteredMembers.map((member) => (
                 <article className="empty" key={member.id}>
                   <strong>{member.name}</strong>
                   <p className="muted">{member.email}</p>
@@ -326,7 +342,11 @@ function OwnerPageContent() {
                 </article>
               ))
             ) : (
-              <div className="empty">No customers found yet.</div>
+              <div className="empty">
+                {members.length === 0
+                  ? "No customers found yet."
+                  : `No customers matching "${searchQuery}".`}
+              </div>
             )}
           </div>
         </div>

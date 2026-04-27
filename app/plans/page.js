@@ -10,6 +10,7 @@ function PlansContent() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
   const [message, setMessage] = useState("");
+  const [showSubscribePopup, setShowSubscribePopup] = useState(false);
 
   useEffect(() => {
     async function loadPlans() {
@@ -36,6 +37,8 @@ function PlansContent() {
         token,
         body: { planId },
       });
+      setShowSubscribePopup(true);
+      setTimeout(() => setShowSubscribePopup(false), 2000);
       setMessage(`Subscribed to ${payload.subscription.plan_name}.`);
     } catch (subscribeError) {
       setError(subscribeError.message);
@@ -44,6 +47,7 @@ function PlansContent() {
 
   return (
     <main className="page">
+      {showSubscribePopup && <div className="subscribePopup">Subscribed!</div>}
       <section className="panel" style={{ marginBottom: 22 }}>
         <div className="panelInner">
           <span className="pill">Plans</span>

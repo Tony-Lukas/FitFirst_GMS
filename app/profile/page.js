@@ -13,6 +13,7 @@ function ProfileContent() {
   const [currentCheckin, setCurrentCheckin] = useState(null);
   const [feedback, setFeedback] = useState("");
   const [error, setError] = useState("");
+  const [showCancelPopup, setShowCancelPopup] = useState(false);
 
   const loadData = useCallback(async () => {
     try {
@@ -101,7 +102,8 @@ function ProfileContent() {
         method: "PUT",
         token,
       });
-      setFeedback("Subscription cancelled successfully.");
+      setShowCancelPopup(true);
+      setTimeout(() => setShowCancelPopup(false), 2000);
       await loadData();
     } catch (requestError) {
       setError(requestError.message);
@@ -112,6 +114,7 @@ function ProfileContent() {
 
   return (
     <main className="page">
+      {showCancelPopup && <div className="cancelPopup">Cancelled subscription!</div>}
       <section className="hero">
         <div className="panel">
           <div className="panelInner">

@@ -25,6 +25,7 @@ function OwnerPageContent() {
   const [toastMessage, setToastMessage] = useState("");
   const [toastKey, setToastKey] = useState(0);
   const [searchQuery, setSearchQuery] = useState("");
+  const [cancelModal, setCancelModal] = useState({ show: false, subscriptionId: null, planName: "", confirmed: false });
 
   const loadAll = useCallback(async () => {
     try {
@@ -176,6 +177,14 @@ function OwnerPageContent() {
   });
 
   async function handleCancelSubscription(subscriptionId) {
+    setCancelModal({ show: true, subscriptionId, planName: "" });
+  }
+
+  async function confirmCancelSubscription() {
+    const { subscriptionId } = cancelModal;
+    // Show cancelled state first
+    setCancelModal({ show: true, subscriptionId, planName: "", confirmed: true });
+    
     setMessage("");
     setError("");
 
@@ -186,8 +195,13 @@ function OwnerPageContent() {
       });
       setMessage("Subscription cancelled.");
       await loadAll();
+      // Close modal after a short delay
+      setTimeout(() => {
+        setCancelModal({ show: false, subscriptionId: null, planName: "", confirmed: false });
+      }, 1500);
     } catch (cancelError) {
       setError(cancelError.message);
+      setCancelModal({ show: false, subscriptionId: null, planName: "", confirmed: false });
     }
   }
 
@@ -342,7 +356,7 @@ function OwnerPageContent() {
                           <p className={getStatusClass(subscription.computed_status)}>
                             {subscription.computed_status}
                           </p>
-                          <div style={{ display: "flex", gap: 10, flexWrap: "wrap", margin: "12px 0" }}>
+                          <div style={{ display: "flex", gap: 10, flexWrap: "wrap", margin: "12px 0", justifyContent: "center" }}>
                             <button
                               className="buttonGhost"
                               onClick={() => createPayment(subscription.id, subscription.price_cents)}
@@ -388,6 +402,32 @@ function OwnerPageContent() {
         </div>
       </section>
       {toastMessage && <div key={toastKey} className="toast">{toastMessage}</div>}
+      {cancelModal.show && (
+        <div className="modalOverlay" onClick={() => !cancelModal.confirmed && setCancelModal({ show: false, subscriptionId: null, planName: "", confirmed: false })}>
+          <div className="modalContent" onClick={(e) => e.stopPropagation()}>
+            {cancelModal.confirmed ? (
+              <>
+                <div className="cancelSuccessIcon">✓</div>
+                <h3>Cancelled!</h3>
+                <p>The subscription has been successfully cancelled.</p>
+              </>
+            ) : (
+              <>
+                <h3>Cancel Subscription</h3>
+                <p>Are you sure you want to cancel this subscription? This action cannot be undone.</p>
+                <div className="modalActions">
+                  <button className="buttonGhost" onClick={() => setCancelModal({ show: false, subscriptionId: null, planName: "", confirmed: false })}>
+                    Keep Subscription
+                  </button>
+                  <button className="buttonDanger" onClick={confirmCancelSubscription}>
+                    Yes, Cancel
+                  </button>
+                </div>
+              </>
+            )}
+          </div>
+        </div>
+      )}
     </main>
   );
 }

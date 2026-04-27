@@ -14,6 +14,8 @@ function ProfileContent() {
   const [feedback, setFeedback] = useState("");
   const [error, setError] = useState("");
   const [showCancelPopup, setShowCancelPopup] = useState(false);
+  const [showCheckinPopup, setShowCheckinPopup] = useState(false);
+  const [showCheckoutPopup, setShowCheckoutPopup] = useState(false);
 
   const loadData = useCallback(async () => {
     try {
@@ -70,6 +72,8 @@ function ProfileContent() {
         method: "POST",
         token,
       });
+      setShowCheckinPopup(true);
+      setTimeout(() => setShowCheckinPopup(false), 2000);
       setFeedback(`Checked in at ${new Date(payload.checkin.checkin_at).toLocaleString()}.`);
       await loadData();
     } catch (requestError) {
@@ -86,6 +90,8 @@ function ProfileContent() {
         method: "POST",
         token,
       });
+      setShowCheckoutPopup(true);
+      setTimeout(() => setShowCheckoutPopup(false), 2000);
       setFeedback(`Checked out at ${new Date(payload.checkin.checkout_at).toLocaleString()}.`);
       await loadData();
     } catch (requestError) {
@@ -115,6 +121,8 @@ function ProfileContent() {
   return (
     <main className="page">
       {showCancelPopup && <div className="cancelPopup">Cancelled subscription!</div>}
+      {showCheckinPopup && <div className="subscribePopup">Check in!</div>}
+      {showCheckoutPopup && <div className="subscribePopup">Check out!</div>}
       <section className="hero">
         <div className="panel">
           <div className="panelInner">

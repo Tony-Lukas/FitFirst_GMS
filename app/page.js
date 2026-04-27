@@ -1,10 +1,29 @@
 "use client";
 
 import Link from "next/link";
+import { useEffect, useState } from "react";
 import { useAuth } from "../components/AuthProvider";
 
 export default function HomePage() {
   const { user } = useAuth();
+  const [topPlans, setTopPlans] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchTopPlans = async () => {
+      try {
+        const response = await fetch("/api/plans/top");
+        const data = await response.json();
+        setTopPlans(data.plans || []);
+      } catch (error) {
+        console.error("Failed to fetch top plans:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchTopPlans();
+  }, []);
 
   return (
     <main className="page">
@@ -34,25 +53,25 @@ export default function HomePage() {
           <div className="panelInner">
             <div className="system-core-header">
               <span className="live-indicator"></span>
-              <span className="formLabel">System Core</span>
+              <span className="formLabel">Top Plans</span>
             </div>
             <div className="stat-grid">
-              <div className="stat-card">
-                <div className="stat-label">Auth</div>
-                <div className="stat-value">JWT</div>
-              </div>
-              <div className="stat-card">
-                <div className="stat-label">Database</div>
-                <div className="stat-value">Postgres</div>
-              </div>
-              <div className="stat-card">
-                <div className="stat-label">Realtime</div>
-                <div className="stat-value">Sockets</div>
-              </div>
-              <div className="stat-card">
-                <div className="stat-label">Roles</div>
-                <div className="stat-value">2</div>
-              </div>
+              {loading ? (
+                <div className="stat-card">
+                  <div className="stat-label">Loading...</div>
+                </div>
+              ) : topPlans.length > 0 ? (
+                topPlans.map((plan) => (
+                  <div key={plan.id} className="stat-card">
+                    <div className="stat-label">{plan.name}</div>
+                    <div className="stat-value">{plan.subscriber_count} subscribers</div>
+                  </div>
+                ))
+              ) : (
+                <div className="stat-card">
+                  <div className="stat-label">No plans yet</div>
+                </div>
+              )}
             </div>
           </div>
         </div>

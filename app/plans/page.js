@@ -82,7 +82,7 @@ function PlansContent() {
                 </h2>
                 <p className="muted">{plan.description}</p>
                 <p style={{ fontSize: "2rem", fontWeight: 800, margin: "16px 0" }}>
-                  ${(plan.price_cents / 100).toFixed(2)}
+                  {plan.price_cents} THB
                 </p>
                 {user?.role === "customer" ? (
                   <button className="button" onClick={() => subscribe(plan.id)}>

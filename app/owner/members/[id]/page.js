@@ -1,0 +1,229 @@
+"use client";
+
+import { useCallback, useEffect, useState } from "react";
+import { useParams } from "next/navigation";
+import { ProtectedPage } from "../../../../components/ProtectedPage";
+import { useAuth } from "../../../../components/AuthProvider";
+import { apiRequest } from "../../../../components/api";
+
+function MemberDetailContent() {
+  const { id } = useParams();
+  const { token } = useAuth();
+  const [member, setMember] = useState(null);
+  const [message, setMessage] = useState("");
+  const [error, setError] = useState("");
+  const [toastMessage, setToastMessage] = useState("");
+  const [toastKey, setToastKey] = useState(0);
+
+  const loadMember = useCallback(async () => {
+    try {
+      const usersPayload = await apiRequest("/api/users", { token });
+      const foundMember = usersPayload.users.find(u => u.id == id);
+      if (!foundMember) throw new Error("Member not found");
+      setMember(foundMember);
+    } catch (err) {
+      setError(err.message);
+    }
+  }, [token, id]);
+
+  useEffect(() => {
+    loadMember();
+  }, [loadMember]);
+
+  async function createPayment(subscriptionId, amountCents) {
+    setMessage("");
+    setError("");
+
+    try {
+      await apiRequest(`/api/subscriptions/${subscriptionId}/payments`, {
+        method: "POST",
+        token,
+        body: {
+          amount_cents: amountCents,
+          method: "manual",
+          notes: "Created by owner",
+        },
+      });
+      setMessage("Payment record added.");
+      await loadMember();
+    } catch (paymentError) {
+      setError(paymentError.message);
+    }
+  }
+
+  async function updatePayment(paymentId, paid, notes) {
+    setMessage("");
+    setError("");
+
+    try {
+      await apiRequest(`/api/payments/${paymentId}`, {
+        method: "PUT",
+        token,
+        body: { paid, notes },
+      });
+      setToastMessage("Updated payment!");
+      setToastKey((prev) => prev + 1);
+      await loadMember();
+    } catch (paymentError) {
+      setError(paymentError.message);
+    }
+  }
+
+  useEffect(() => {
+    if (toastMessage) {
+      const timer = setTimeout(() => {
+        setToastMessage("");
+      }, 3000);
+      return () => clearTimeout(timer);
+    }
+  }, [toastMessage, toastKey]);
+
+  async function handleCancelSubscription(subscriptionId) {
+    setMessage("");
+    setError("");
+
+    try {
+      await apiRequest(`/api/subscriptions/${subscriptionId}/cancel`, {
+        method: "PUT",
+        token,
+      });
+      setMessage("Subscription cancelled.");
+      await loadMember();
+    } catch (cancelError) {
+      setError(cancelError.message);
+    }
+  }
+
+  if (!member) return <div>Loading...</div>;
+
+  return (
+    <main className="page">
+      <section className="hero">
+        <div className="panel">
+          <div className="panelInner">
+            <span className="pill">Member Details</span>
+            <h1 className="sectionTitle" style={{ marginTop: 14 }}>
+              {member.name}
+            </h1>
+            <p className="muted">{member.email}</p>
+            {message ? (
+              <p className="statusActive" style={{ marginTop: 10 }}>
+                {message}
+              </p>
+            ) : null}
+            {error ? (
+              <p className="statusCancelled" style={{ marginTop: 10 }}>
+                {error}
+              </p>
+            ) : null}
+          </div>
+        </div>
+      </section>
+
+      <section className="panel" style={{ marginBottom: 22 }}>
+        <div className="panelInner">
+          <h2 className="sectionTitle">Subscribed Plans</h2>
+          <div className="cardList">
+            {(member.subscriptions || []).length ? (
+              (member.subscriptions || []).map((subscription) => (
+                <div className="panel" key={subscription.id}>
+                  <div className="panelInner">
+                    <strong>{subscription.plan_name}</strong>
+                    <p className="muted">
+                      {subscription.start_date} to {subscription.end_date}
+                    </p>
+                    <p className={getStatusClass(subscription.computed_status)}>
+                      {subscription.computed_status}
+                    </p>
+                    <div style={{ display: "flex", gap: 10, flexWrap: "wrap", margin: "12px 0" }}>
+                      <button
+                        className="btn buttonGhost"
+                        onClick={() => createPayment(subscription.id, subscription.price_cents)}
+                      >
+                        Add Payment
+                      </button>
+                      {subscription.computed_status === "active" && (
+                        <button
+                          className="btn buttonDanger"
+                          onClick={() => handleCancelSubscription(subscription.id)}
+                        >
+                          Cancel Subscription
+                        </button>
+                      )}
+                    </div>
+                    <div className="cardList">
+                      {(subscription.payments || []).length ? (
+                        subscription.payments.map((payment) => (
+                          <PaymentEditor
+                            key={payment.id}
+                            payment={payment}
+                            onSave={updatePayment}
+                          />
+                        ))
+                      ) : (
+                        <div className="muted">No payments yet.</div>
+                      )}
+                    </div>
+                  </div>
+                </div>
+              ))
+            ) : (
+              <div className="empty">No subscriptions found.</div>
+            )}
+          </div>
+        </div>
+      </section>
+      {toastMessage && <div key={toastKey} className="toast">{toastMessage}</div>}
+    </main>
+  );
+}
+
+function PaymentEditor({ payment, onSave }) {
+  const [notes, setNotes] = useState(payment.notes || "");
+  const [paid, setPaid] = useState(payment.paid);
+
+  return (
+    <div className="empty">
+      <strong>{payment.amount_cents} THB</strong>
+      <p className="muted">{payment.method || "manual"}</p>
+      <div className="formGrid" style={{ marginTop: 10 }}>
+        <select
+          className="select"
+          value={paid ? "true" : "false"}
+          onChange={(event) => setPaid(event.target.value === "true")}
+        >
+          <option value="true">Paid</option>
+          <option value="false">Unpaid</option>
+        </select>
+        <textarea
+          className="textarea"
+          value={notes}
+          onChange={(event) => setNotes(event.target.value)}
+        />
+        <button className="btn buttonGhost" onClick={() => onSave(payment.id, paid, notes)}>
+          Save Payment Update
+        </button>
+      </div>
+    </div>
+  );
+}
+
+function getStatusClass(status) {
+  if (status === "active") {
+    return "statusActive";
+  }
+
+  if (status === "cancelled") {
+    return "statusCancelled";
+  }
+
+  return "statusExpired";
+}
+
+export default function MemberDetailPage() {
+  return (
+    <ProtectedPage roles={["owner"]}>
+      <MemberDetailContent />
+    </ProtectedPage>
+  );
+}

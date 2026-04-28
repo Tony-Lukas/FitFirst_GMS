@@ -2,6 +2,7 @@
 
 import { useCallback, useEffect, useState } from "react";
 import { io } from "socket.io-client";
+import Link from "next/link";
 import { ProtectedPage } from "../../components/ProtectedPage";
 import { useAuth } from "../../components/AuthProvider";
 import { apiRequest } from "../../components/api";
@@ -12,8 +13,6 @@ function OwnerPageContent() {
   const [members, setMembers] = useState([]);
   const [message, setMessage] = useState("");
   const [error, setError] = useState("");
-  const [toastMessage, setToastMessage] = useState("");
-  const [toastKey, setToastKey] = useState(0);
   const [searchQuery, setSearchQuery] = useState("");
 
   const loadAll = useCallback(async () => {
@@ -50,54 +49,6 @@ function OwnerPageContent() {
       socket.disconnect();
     };
   }, [loadAll]);
-
-  async function createPayment(subscriptionId, amountCents) {
-    setMessage("");
-    setError("");
-
-    try {
-      await apiRequest(`/api/subscriptions/${subscriptionId}/payments`, {
-        method: "POST",
-        token,
-        body: {
-          amount_cents: amountCents,
-          method: "manual",
-          notes: "Created by owner",
-        },
-      });
-      setMessage("Payment record added.");
-      await loadAll();
-    } catch (paymentError) {
-      setError(paymentError.message);
-    }
-  }
-
-  async function updatePayment(paymentId, paid, notes) {
-    setMessage("");
-    setError("");
-
-    try {
-      await apiRequest(`/api/payments/${paymentId}`, {
-        method: "PUT",
-        token,
-        body: { paid, notes },
-      });
-      setToastMessage("Updated payment!");
-      setToastKey((prev) => prev + 1);
-      await loadAll();
-    } catch (paymentError) {
-      setError(paymentError.message);
-    }
-  }
-
-  useEffect(() => {
-    if (toastMessage) {
-      const timer = setTimeout(() => {
-        setToastMessage("");
-      }, 3000);
-      return () => clearTimeout(timer);
-    }
-  }, [toastMessage, toastKey]);
 
   const filteredMembers = members.filter((member) => {
     const query = searchQuery.toLowerCase();
@@ -183,54 +134,12 @@ function OwnerPageContent() {
           <div className="cardList">
             {filteredMembers.length ? (
               filteredMembers.map((member) => (
-                <article className="empty" key={member.id}>
-                  <strong>{member.name}</strong>
-                  <p className="muted">{member.email}</p>
-                  <div className="cardList" style={{ marginTop: 12 }}>
-                    {(member.subscriptions || []).map((subscription) => (
-                      <div className="panel" key={subscription.id}>
-                        <div className="panelInner">
-                          <strong>{subscription.plan_name}</strong>
-                          <p className="muted">
-                            {subscription.start_date} to {subscription.end_date}
-                          </p>
-                          <p className={getStatusClass(subscription.computed_status)}>
-                            {subscription.computed_status}
-                          </p>
-                          <div style={{ display: "flex", gap: 10, flexWrap: "wrap", margin: "12px 0" }}>
-                            <button
-                              className="btn buttonGhost"
-                              onClick={() => createPayment(subscription.id, subscription.price_cents)}
-                            >
-                              Add Payment
-                            </button>
-                            {subscription.computed_status === "active" && (
-                              <button
-                                className="btn buttonDanger"
-                                onClick={() => handleCancelSubscription(subscription.id)}
-                              >
-                                Cancel Subscription
-                              </button>
-                            )}
-                          </div>
-                          <div className="cardList">
-                            {(subscription.payments || []).length ? (
-                              subscription.payments.map((payment) => (
-                                <PaymentEditor
-                                  key={payment.id}
-                                  payment={payment}
-                                  onSave={updatePayment}
-                                />
-                              ))
-                            ) : (
-                              <div className="muted">No payments yet.</div>
-                            )}
-                          </div>
-                        </div>
-                      </div>
-                    ))}
-                  </div>
-                </article>
+                <Link href={`/owner/members/${member.id}`} key={member.id}>
+                  <article className="empty">
+                    <strong>{member.name}</strong>
+                    <p className="muted">{member.email}</p>
+                  </article>
+                </Link>
               ))
             ) : (
               <div className="empty">
@@ -240,54 +149,11 @@ function OwnerPageContent() {
               </div>
             )}
           </div>
-          </div>
+        </div>
         </div>
       </section>
-      {toastMessage && <div key={toastKey} className="toast">{toastMessage}</div>}
     </main>
   );
-}
-
-function PaymentEditor({ payment, onSave }) {
-  const [notes, setNotes] = useState(payment.notes || "");
-  const [paid, setPaid] = useState(payment.paid);
-
-  return (
-    <div className="empty">
-      <strong>${(payment.amount_cents / 100).toFixed(2)}</strong>
-      <p className="muted">{payment.method || "manual"}</p>
-      <div className="formGrid" style={{ marginTop: 10 }}>
-        <select
-          className="select"
-          value={paid ? "true" : "false"}
-          onChange={(event) => setPaid(event.target.value === "true")}
-        >
-          <option value="true">Paid</option>
-          <option value="false">Unpaid</option>
-        </select>
-        <textarea
-          className="textarea"
-          value={notes}
-          onChange={(event) => setNotes(event.target.value)}
-        />
-        <button className="btn uttonGhost" onClick={() => onSave(payment.id, paid, notes)}>
-          Save Payment Update
-        </button>
-      </div>
-    </div>
-  );
-}
-
-function getStatusClass(status) {
-  if (status === "active") {
-    return "statusActive";
-  }
-
-  if (status === "cancelled") {
-    return "statusCancelled";
-  }
-
-  return "statusExpired";
 }
 
 export default function OwnerPage() {

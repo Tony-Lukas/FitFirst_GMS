@@ -508,7 +508,7 @@ function OwnerPageContent() {
           {/* Search Input */}
           <input
             className="input"
-            placeholder="Search customers by name or email..."
+            placeholder="Search customers by name or email."
             value={searchQuery}
             onChange={(event) => setSearchQuery(event.target.value)}
             style={{ marginBottom: 16 }}

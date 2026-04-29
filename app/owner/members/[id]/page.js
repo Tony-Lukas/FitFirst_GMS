@@ -116,6 +116,8 @@ function MemberDetailContent() {
    * Used to mark payments as paid/unpaid and add notes
    * Shows a toast notification on success
    */
+
+  /*paid, unpaid, notes */
   async function updatePayment(paymentId, paid, notes) {
     setMessage("");
     setError("");
@@ -207,9 +209,9 @@ function MemberDetailContent() {
       </section>
 
       {/* Subscriptions Section: List all subscriptions with payments */}
-      <section className="panel" style={{ marginBottom: 22 }}>
+      {/* <section className="panel" style={{ marginBottom: 22 }}>
         <div className="panelInner">
-          <h2 className="sectionTitle">Subscribed Plans</h2>
+          <h2 className="sectionTitle">Subscribed Plans</h2> */}
           <div className="cardList">
             {/* Check if member has any subscriptions */}
             {(member.subscriptions || []).length ? (
@@ -267,8 +269,8 @@ function MemberDetailContent() {
               <div className="empty">No subscriptions found.</div>
             )}
           </div>
-        </div>
-      </section>
+        {/* </div>
+      </section> */}
       
       {/* Toast Notification */}
       {toastMessage && <div key={toastKey} className="toast">{toastMessage}</div>}

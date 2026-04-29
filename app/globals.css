@@ -1,111 +1,162 @@
+/* ═══════════════════════════════════════════════════════════════════════════
+ * FitFirst GMS - Global Styles
+ * 
+ * This is the main stylesheet for the FitFirst Gym Management System.
+ * It provides a dark theme with lime green accents, designed for a modern
+ * gym/ fitness center dashboard interface.
+ * 
+ * Color Palette:
+ * - Background: Dark (#0d0d0d to #111111)
+ * - Surface: Slightly lighter dark (#171717)
+ * - Primary: Vivid Lime Green (#84cc16)
+ * - Accent/Danger: Red (#ef4444)
+ * 
+ * Typography: Inter font family with Barlow for headings
+ * ═══════════════════════════════════════════════════════════════════════════ */
+
+/* ─────────────────────────────────────────────────────────────────────────────
+ * CSS Custom Properties (CSS Variables)
+ * 
+ * Centralized design tokens for consistent theming across the application.
+ * These variables can be overridden or accessed via var(--variable-name)
+ * ───────────────────────────────────────────────────────────────────────────── */
+
 :root {
   /* Typography */
   --font-heading: "Inter", "Barlow", system-ui, sans-serif;
   --font-body: "Inter", system-ui, sans-serif;
 
-  /* Colors */
-  --background: #0d0d0d;
-  --background-top: #111111;
-  --surface: #171717;
-  --surface-soft: #222222;
-  --foreground: #ffffff;
-  --muted: #a3a3a3;
-  --primary: #84cc16; /* Vivid Lime Green */
-  --primary-foreground: #000000;
-  --primary-soft: rgba(132, 204, 22, 0.1);
-  --accent: #ef4444;
-  --danger: #ef4444;
-  --border: rgba(255, 255, 255, 0.08);
-  --shadow: 0 4px 24px rgba(0, 0, 0, 0.5);
-  --focus-ring: 0 0 0 3px rgba(132, 204, 22, 0.3);
+  /* Colors - Dark theme palette */
+  --background: #0d0d0d;        /* Main background (near black) */
+  --background-top: #111111;    /* Slightly lighter for gradients */
+  --surface: #171717;           /* Card/panel background */
+  --surface-soft: #222222;      /* Input backgrounds, hover states */
+  --foreground: #ffffff;        /* Primary text color */
+  --muted: #a3a3a3;             /* Secondary/muted text */
+  --primary: #84cc16;           /* Lime green - main brand color */
+  --primary-foreground: #000000; /* Text on primary color */
+  --primary-soft: rgba(132, 204, 22, 0.1); /* Subtle primary tint */
+  --accent: #ef4444;            /* Red for warnings, cancel actions */
+  --danger: #ef4444;            /* Alias for accent (danger actions) */
+  --border: rgba(255, 255, 255, 0.08); /* Subtle borders */
+  --shadow: 0 4px 24px rgba(0, 0, 0, 0.5); /* Card shadows */
+  --focus-ring: 0 0 0 3px rgba(132, 204, 22, 0.3); /* Focus indicator */
   
-  /* Radius */
-  --radius-sm: 8px;
-  --radius-md: 16px;
-  --radius-lg: 20px;
-  --radius-xl: 24px;
+  /* Border radius - consistent corner rounding */
+  --radius-sm: 8px;    /* Small elements (badges, small buttons) */
+  --radius-md: 16px;   /* Medium elements (inputs, regular buttons) */
+  --radius-lg: 20px;   /* Large elements (cards, panels) */
+  --radius-xl: 24px;   /* Extra large (hero sections) */
 }
 
+/* ═══════════════════════════════════════════════════════════════════════════
+ * CSS Reset & Base Styles
+ * 
+ * Normalizes browser defaults and sets foundation styles for the entire app.
+ * ═══════════════════════════════════════════════════════════════════════════ */
+
+/* Universal selector - applies to all elements */
 *,
 *::before,
 *::after {
-  box-sizing: border-box;
-  padding: 0;
-  margin: 0;
+  box-sizing: border-box;  /* Include padding/border in element width */
+  padding: 0;              /* Remove default padding */
+  margin: 0;               /* Remove default margins */
 }
 
+/* html & body - viewport settings */
 html,
 body {
-  max-width: 100vw;
-  min-height: 100vh;
-  overflow-x: hidden;
+  max-width: 100vw;        /* Prevent horizontal overflow */
+  min-height: 100vh;       /* Full viewport height minimum */
+  overflow-x: hidden;      /* Hide overflow content */
 }
 
+/* body - main text and background */
 body {
   color: var(--foreground);
   background-color: var(--background);
   font-family: var(--font-body), sans-serif;
   font-size: 16px;
-  line-height: 1.65;
-  -webkit-font-smoothing: antialiased;
+  line-height: 1.65;       /* Comfortable line height for readability */
+  -webkit-font-smoothing: antialiased; /* Smooth font rendering on Mac */
 }
 
+/* Links - remove default styling */
 a {
   color: inherit;
   text-decoration: none;
   transition: all 0.15s ease;
 }
 
+/* Headings - consistent font family and weight */
 h1, h2, h3, h4 {
   font-family: var(--font-heading), sans-serif;
   font-weight: 700;
-  letter-spacing: -0.03em;
+  letter-spacing: -0.03em; /* Slight letter tightening for headings */
   color: var(--foreground);
 }
 
+/* Responsive heading sizes using clamp() */
 h1 { font-size: clamp(3.5rem, 8vw, 4.5rem); line-height: 1.05; }
 h2 { font-size: 2.25rem; line-height: 1.1; }
 h3 { font-size: 1.5rem; }
 h4 { font-size: 1.1rem; }
 
+/* Form elements - inherit font from parent */
 button, input, select, textarea {
   font: inherit;
 }
 
+/* Buttons - cursor indication */
 button { cursor: pointer; }
 
+/* main - centered content container */
 main {
-  width: min(1120px, calc(100% - 2rem));
+  width: min(1120px, calc(100% - 2rem)); /* Max 1120px or full width minus margins */
   margin: 0 auto;
 }
 
+/* .page - page-level padding for content areas */
 .page {
   padding: 80px 0 120px;
 }
 
-/* ─── Layout ─────────────────────────────── */
+/* ═══════════════════════════════════════════════════════════════════════════
+ * Layout Utilities
+ * 
+ * Grid and flexbox helpers for page structure.
+ * ═══════════════════════════════════════════════════════════════════════════ */
 
+/* .hero - Two-column hero section layout */
 .hero {
   display: grid;
-  grid-template-columns: 1.4fr 0.6fr;
+  grid-template-columns: 1.4fr 0.6fr; /* 60/40 split ratio */
   gap: 2rem;
   align-items: stretch;
   margin-bottom: 4rem;
 }
 
+/* .gridTwo - Two equal columns */
 .gridTwo {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 1.5rem;
 }
 
+/* .gridThree - Three equal columns */
 .gridThree {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: 1.5rem;
 }
 
-/* ─── Panel ──────────────────────────────── */
+/* ═══════════════════════════════════════════════════════════════════════════
+ * Panel Component Styles
+ * 
+ * Cards and content containers used throughout the dashboard.
+ * Provides depth with shadows and subtle hover animations.
+ * ═══════════════════════════════════════════════════════════════════════════ */
 
 .panel {
   background: var(--surface);
@@ -115,17 +166,30 @@ main {
   transition: all 0.15s ease;
 }
 
+/* Lift effect on hover - indicates interactivity */
 .panel:hover {
   transform: translateY(-4px);
   border-color: rgba(255, 255, 255, 0.15);
 }
 
+/* Inner padding for panel content */
 .panelInner {
   padding: 24px;
 }
 
-/* ─── Buttons ────────────────────────────── */
+/* ═══════════════════════════════════════════════════════════════════════════
+ * Button Styles
+ * 
+ * Primary interaction element styles. Includes multiple variants:
+ * - .btn: Base button styles
+ * - .btn-primary: Main call-to-action (lime green)
+ * - .btn-ghost: Secondary/outline style
+ * - .btn-danger: Destructive actions (red)
+ * 
+ * All buttons include hover lift effects and disabled states.
+ * ═══════════════════════════════════════════════════════════════════════════ */
 
+/* Base button - applies to all button elements */
 .btn {
   display: inline-flex;
   align-items: center;
@@ -138,21 +202,25 @@ main {
   transition: all 0.15s ease;
 }
 
+/* Hover lift effect */
 .btn:hover {
   transform: translateY(-1px);
   box-shadow: 0 0 20px rgba(132, 204, 22, 0.2);
 }
 
+/* Active/pressed state - slight scale down */
 .btn:active {
   transform: scale(0.98);
 }
 
+/* Disabled state - reduced opacity, no pointer */
 .btn:disabled {
   opacity: 0.45;
   cursor: not-allowed;
   transform: none;
 }
 
+/* Primary button variant - lime green background */
 .btn-primary,
 .btn-secondary,
 .btn-ghost,
@@ -165,18 +233,21 @@ main {
   transition: all 0.2s ease;
 }
 
+/* Primary hover - enhanced shadow */
 .button:hover,
 .buttonGhost:hover {
   transform: translateY(-2px);
   box-shadow: 0 4px 12px rgba(132, 204, 22, 0.3);
 }
 
+/* Ghost button hover - outline style */
 .btn-ghost:hover {
   background: var(--surface-soft);
   color: var(--primary);
   border-color: var(--primary);
 }
 
+/* Danger button - red for destructive actions */
 .btn-danger,
 .buttonDanger {
   background: var(--accent);
@@ -187,53 +258,67 @@ main {
   transition: all 0.2s ease;
 }
 
+/* Danger hover - enhanced shadow */
 .buttonDanger:hover {
   transform: translateY(-2px);
   box-shadow: 0 4px 12px rgba(239, 68, 68, 0.3);
 }
 
+/* Small button variant */
 .btn-sm {
   padding: 6px 13px;
   font-size: 13px;
   border-radius: var(--radius-sm);
 }
 
+/* Large button variant */
 .btn-lg {
   padding: 12px 24px;
   font-size: 16px;
   border-radius: var(--radius-lg);
 }
 
-/* ─── Form controls ──────────────────────── */
+/* ═══════════════════════════════════════════════════════════════════════════
+ * Form Control Styles
+ * 
+ * Input fields, selects, and textareas for user data entry.
+ * Includes focus states with primary color ring for accessibility.
+ * ═══════════════════════════════════════════════════════════════════════════ */
 
+/* Form grid - vertical stacking of form fields */
 .formGrid {
   display: grid;
   gap: 1rem;
 }
 
+/* Form row - two-column layout for inline fields */
 .formRow {
   display: grid;
   gap: 1rem;
   grid-template-columns: repeat(2, minmax(0, 1fr));
 }
 
+/* Form field - label + input container */
 .formField {
   display: flex;
   flex-direction: column;
   gap: 5px;
 }
 
+/* Form label - field name display */
 .formLabel {
   font-size: 13px;
   font-weight: 500;
   color: var(--foreground);
 }
 
+/* Form hint - helper text below field */
 .formHint {
   font-size: 12px;
   color: var(--muted);
 }
 
+/* Base input styles - shared by input, select, textarea */
 .input,
 .select,
 .textarea {
@@ -245,15 +330,17 @@ main {
   color: var(--foreground);
   font-size: 14px;
   transition: all 0.2s ease;
-  outline: none;
+  outline: none; /* Custom focus ring instead */
 }
 
+/* Hover state - subtle border lightening */
 .input:hover,
 .select:hover,
 .textarea:hover {
   border-color: rgba(255, 255, 255, 0.2);
 }
 
+/* Focus state - primary color border + glow ring */
 .input:focus,
 .select:focus,
 .textarea:focus {
@@ -262,53 +349,72 @@ main {
   transform: translateY(-1px);
 }
 
+/* Select specific - custom dropdown arrow */
 .select {
   cursor: pointer;
-  appearance: none;
+  appearance: none; /* Hide default arrow */
+  /* SVG dropdown arrow encoded as data URI */
   background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%23a3a3a3' d='M6 8L1 3h10z'/%3E%3C/svg%3E");
   background-repeat: no-repeat;
   background-position: right 12px center;
   padding-right: 36px;
 }
 
+/* Select hover - brighter border */
 .select:hover {
   border-color: rgba(255, 255, 255, 0.3);
   background-color: var(--surface);
 }
 
+/* Select options - dark background for dropdown */
 .select option {
   background: var(--surface);
   color: var(--foreground);
   padding: 8px;
 }
 
+/* Textarea - vertical resize only, minimum height */
 .textarea {
   resize: vertical;
   min-height: 90px;
 }
 
-/* ─── Badges ─────────────────────────────── */
+/* ═══════════════════════════════════════════════════════════════════════════
+ * Badge Styles
+ * 
+ * Status indicators and labels. Uses pill-shaped design with color coding:
+ * - Green: Active, Paid, Completed
+ * - Yellow: Pending, Expiring
+ * - Red: Cancelled, Unpaid
+ * - Blue: Review
+ * - Gray: Draft
+ * 
+ * Each badge includes a small dot (::before) as a visual indicator.
+ * ═══════════════════════════════════════════════════════════════════════════ */
 
+/* Base badge - pill shape with dot */
 .badge {
   display: inline-flex;
   align-items: center;
   gap: 5px;
   padding: 3px 10px;
-  border-radius: 999px;
+  border-radius: 999px; /* Fully rounded = pill shape */
   font-size: 12px;
   font-weight: 500;
   border: 0.5px solid transparent;
 }
 
+/* Dot indicator using CSS pseudo-element */
 .badge::before {
   content: "";
   width: 6px;
   height: 6px;
   border-radius: 50%;
-  background: currentColor;
+  background: currentColor; /* Inherits text color */
   flex-shrink: 0;
 }
 
+/* Status: Active/Paid/Completed - Green */
 .badge-active,
 .badge-paid,
 .badge-completed {
@@ -316,30 +422,40 @@ main {
   color: #14532d;
 }
 
+/* Status: Pending/Expiring - Yellow/Amber */
 .badge-pending,
 .badge-expiring {
   background: #fbbf24;
   color: #78350f;
 }
 
+/* Status: Cancelled/Unpaid - Red */
 .badge-cancelled,
 .badge-unpaid {
   background: #fca5a5;
   color: #7f1d1d;
 }
 
+/* Status: Under Review - Blue */
 .badge-review {
   background: #93c5fd;
   color: #1e3a5f;
 }
 
+/* Status: Draft - Gray */
 .badge-draft {
   background: var(--surface);
   color: var(--muted);
   border-color: var(--border);
 }
 
-/* ─── Legacy status aliases ──────────────── */
+/* ═══════════════════════════════════════════════════════════════════════════
+ * Legacy Status Text Classes
+ * 
+ * Simple text color classes for status display (alternative to badges).
+ * Used in places where full badge styling isn't appropriate.
+ * ═══════════════════════════════════════════════════════════════════════════ */
+
 .statusActive,
 .statusPaid,
 .statusCompleted { color: #4ade80; font-weight: 500; }
@@ -349,13 +465,20 @@ main {
 
 .statusExpired { color: #fbbf24; font-weight: 500; }
 
-/* ─── Metric cards ───────────────────────── */
+/* ═══════════════════════════════════════════════════════════════════════════
+ * Card & Metric Styles
+ * 
+ * Content containers for dashboard metrics and list items.
+ * Includes hover lift effects and featured/variant styles.
+ * ═══════════════════════════════════════════════════════════════════════════ */
 
+/* Card list - vertical stacking of cards */
 .cardList {
   display: grid;
   gap: 1rem;
 }
 
+/* Individual card - metric display container */
 .card {
   background: var(--surface);
   border: 1px solid var(--border);
@@ -364,16 +487,19 @@ main {
   transition: all 0.15s ease;
 }
 
+/* Card hover - lift effect with primary border */
 .card:hover {
   transform: translateY(-4px);
   border-color: var(--primary);
 }
 
+/* Featured card - highlighted border */
 .card-featured {
   border-color: var(--primary);
   border-width: 1.5px;
 }
 
+/* Card icon container */
 .cardIcon {
   width: 36px;
   height: 36px;
@@ -384,6 +510,7 @@ main {
   justify-content: center;
 }
 
+/* Large stat number display */
 .statValue {
   font-family: var(--font-heading), sans-serif;
   font-size: 2.5rem;
@@ -393,6 +520,7 @@ main {
   color: var(--foreground);
 }
 
+/* Section heading */
 .sectionTitle {
   margin-bottom: 0.875rem;
   font-size: 1.2rem;
@@ -400,11 +528,17 @@ main {
   color: var(--foreground);
 }
 
+/* Muted/secondary text */
 .muted {
   color: var(--muted);
 }
 
-/* ─── Empty state ────────────────────────── */
+/* ═══════════════════════════════════════════════════════════════════════════
+ * Empty State
+ * 
+ * Placeholder styling when no content is available.
+ * Provides visual feedback that a section has no data.
+ * ═══════════════════════════════════════════════════════════════════════════ */
 
 .empty {
   padding: 1.25rem;
@@ -416,13 +550,20 @@ main {
   transition: border-color 0.2s ease, transform 0.2s ease;
 }
 
+/* Empty state hover - subtle highlight */
 .empty:hover {
   transform: translateY(-1px);
   border-color: rgba(34, 197, 94, 0.18);
 }
 
-/* ─── Table ──────────────────────────────── */
+/* ═══════════════════════════════════════════════════════════════════════════
+ * Table Styles
+ * 
+ * Data table presentation with sticky header and row hover effects.
+ * Used for member lists, payment history, and other tabular data.
+ * ═══════════════════════════════════════════════════════════════════════════ */
 
+/* Table wrapper - horizontal scroll container */
 .tableWrap {
   overflow-x: auto;
   border: 0.5px solid var(--border);
@@ -430,12 +571,14 @@ main {
   background: var(--surface);
 }
 
+/* Table - full width, collapsed borders */
 table {
   width: 100%;
   border-collapse: collapse;
   font-size: 13px;
 }
 
+/* Table header and cell base styles */
 th,
 td {
   text-align: left;
@@ -443,6 +586,7 @@ td {
   border-bottom: 0.5px solid var(--border);
 }
 
+/* Header row - sticky positioning, uppercase text */
 th {
   color: var(--muted);
   font-size: 12px;
@@ -455,19 +599,27 @@ th {
   z-index: 10;
 }
 
+/* Even rows - subtle background tint */
 tr:nth-child(even) td {
   background: rgba(255, 255, 255, 0.02);
 }
 
+/* Last row - remove bottom border */
 tr:last-child td {
   border-bottom: none;
 }
 
+/* Row hover - highlight entire row */
 tr:hover td {
   background: var(--surface-soft);
 }
 
-/* ─── Pill ───────────────────────────────── */
+/* ═══════════════════════════════════════════════════════════════════════════
+ * Pill/Label Styles
+ * 
+ * Small inline labels for categorization and section headers.
+ * Uses primary brand color for visual prominence.
+ * ═══════════════════════════════════════════════════════════════════════════ */
 
 .pill {
   display: inline-flex;
@@ -483,8 +635,14 @@ tr:hover td {
   letter-spacing: 0.05em;
 }
 
-/* ─── Decorators ─────────────────────────── */
+/* ═══════════════════════════════════════════════════════════════════════════
+ * Decorator & Stat Components
+ * 
+ * Visual components for dashboard statistics and live indicators.
+ * Includes animated elements for real-time status display.
+ * ═══════════════════════════════════════════════════════════════════════════ */
 
+/* Section header with accent underline */
 .system-core-header {
   display: flex;
   align-items: center;
@@ -500,12 +658,14 @@ tr:hover td {
   font-size: 11px;
 }
 
+/* Two-column stat grid */
 .stat-grid {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
   gap: 0.75rem;
 }
 
+/* Individual stat card with left accent border */
 .stat-card {
   background: var(--surface-soft);
   border-left: 4px solid var(--primary);
@@ -514,11 +674,13 @@ tr:hover td {
   transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
 
+/* Stat card hover - lift effect */
 .stat-card:hover {
   transform: translateY(-3px);
   box-shadow: 0 8px 20px rgba(34, 197, 94, 0.15);
 }
 
+/* Staggered entrance animations for stat cards */
 .stat-card:nth-child(1) {
   animation: slideUp 0.4s ease forwards;
   animation-delay: 0.1s;
@@ -537,6 +699,7 @@ tr:hover td {
   opacity: 0;
 }
 
+/* Slide up animation keyframes */
 @keyframes slideUp {
   from {
     opacity: 0;
@@ -548,6 +711,7 @@ tr:hover td {
   }
 }
 
+/* Stat label - small uppercase text */
 .stat-label {
   font-size: 11px;
   text-transform: uppercase;
@@ -555,6 +719,7 @@ tr:hover td {
   color: var(--muted);
 }
 
+/* Stat value - large primary-colored number */
 .stat-value {
   font-family: var(--font-heading);
   font-size: 1.5rem;
@@ -562,6 +727,7 @@ tr:hover td {
   color: var(--primary);
 }
 
+/* Live indicator - pulsing green dot for real-time status */
 .live-indicator {
   width: 8px;
   height: 8px;
@@ -572,13 +738,19 @@ tr:hover td {
   animation: pulse 2s infinite;
 }
 
+/* Pulse animation - expanding ring effect */
 @keyframes pulse {
   0% { box-shadow: 0 0 0 0 rgba(34, 197, 94, 0.7); }
   70% { box-shadow: 0 0 0 10px rgba(34, 197, 94, 0); }
   100% { box-shadow: 0 0 0 0 rgba(34, 197, 94, 0); }
 }
 
-/* ─── Toast Animation ────────────────────── */
+/* ═══════════════════════════════════════════════════════════════════════════
+ * Toast Notification Animation
+ * 
+ * Center-screen popup for brief user feedback messages.
+ * Auto-dismisses after 3 seconds with fade/slide animation.
+ * ═══════════════════════════════════════════════════════════════════════════ */
 
 .toast {
   position: fixed;
@@ -592,10 +764,11 @@ tr:hover td {
   font-weight: 700;
   box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
   z-index: 10000;
-  pointer-events: none;
+  pointer-events: none; /* Click-through, no interaction */
   animation: toastPop 3s ease-in-out forwards;
 }
 
+/* Toast pop animation - slide up, show, slide down */
 @keyframes toastPop {
   0% { opacity: 0; transform: translate(-50%, calc(-50% + 20px)); }
   10% { opacity: 1; transform: translate(-50%, -50%); }
@@ -603,8 +776,17 @@ tr:hover td {
   100% { opacity: 0; transform: translate(-50%, calc(-50% - 20px)); }
 }
 
-/* ─── Cancel Popup ────────────────────────── */
+/* ═══════════════════════════════════════════════════════════════════════════
+ * Action Popup Notifications
+ * 
+ * Full-width centered popups for subscription actions:
+ * - .cancelPopup: Red background for cancellation confirmations
+ * - .subscribePopup: Green background for subscription confirmations
+ * 
+ * Auto-dismisses after 2 seconds with scale animation.
+ * ═══════════════════════════════════════════════════════════════════════════ */
 
+/* Cancellation popup - red theme */
 .cancelPopup {
   position: fixed;
   top: 50%;
@@ -622,6 +804,7 @@ tr:hover td {
   animation: cancelPop 2s ease-in-out forwards;
 }
 
+/* Subscription popup - green theme */
 .subscribePopup {
   position: fixed;
   top: 50%;
@@ -639,6 +822,7 @@ tr:hover td {
   animation: cancelPop 2s ease-in-out forwards;
 }
 
+/* Popup animation - scale in, hold, scale out */
 @keyframes cancelPop {
   0% { opacity: 0; transform: translate(-50%, calc(-50% + 20px)) scale(0.8); }
   15% { opacity: 1; transform: translate(-50%, -50%) scale(1); }
@@ -646,8 +830,14 @@ tr:hover td {
   100% { opacity: 0; transform: translate(-50%, calc(-50% - 20px)) scale(0.8); }
 }
 
-/* ─── Modal Animation ────────────────────── */
+/* ═══════════════════════════════════════════════════════════════════════════
+ * Modal/Dialog Styles
+ * 
+ * Overlay dialogs for confirmations and focused interactions.
+ * Includes backdrop overlay and centered content panel.
+ * ═══════════════════════════════════════════════════════════════════════════ */
 
+/* Modal backdrop - dark overlay covering entire screen */
 .modalOverlay {
   position: fixed;
   top: 0;
@@ -662,11 +852,13 @@ tr:hover td {
   animation: fadeIn 0.2s ease;
 }
 
+/* Fade in animation for overlay */
 @keyframes fadeIn {
   from { opacity: 0; }
   to { opacity: 1; }
 }
 
+/* Modal content panel */
 .modalContent {
   background: var(--surface);
   padding: 24px;
@@ -676,22 +868,26 @@ tr:hover td {
   animation: modalPop 0.3s ease;
 }
 
+/* Modal pop animation - scale up from center */
 @keyframes modalPop {
   0% { opacity: 0; transform: scale(0.9); }
   100% { opacity: 1; transform: scale(1); }
 }
 
+/* Modal heading */
 .modalContent h3 {
   margin: 0 0 12px;
   font-size: 20px;
 }
 
+/* Modal body text */
 .modalContent p {
   color: var(--muted);
   margin: 0 0 20px;
   line-height: 1.5;
 }
 
+/* Modal action buttons container */
 .modalActions {
   display: flex;
   gap: 12px;

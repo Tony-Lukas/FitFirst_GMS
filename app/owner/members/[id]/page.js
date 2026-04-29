@@ -121,7 +121,7 @@ function MemberDetailContent() {
   async function updatePayment(paymentId, paid, notes) {
     setMessage("");
     setError("");
-
+    // edit, update
     try {
       await apiRequest(`/api/payments/${paymentId}`, {
         method: "PUT",
@@ -143,6 +143,7 @@ function MemberDetailContent() {
    * Shows a toast message for 3 seconds (3000ms), then clears it
    * Uses toastKey to force re-render when showing same message
    */
+  // Toast message
   useEffect(() => {
     if (toastMessage) {
       const timer = setTimeout(() => {
@@ -183,10 +184,11 @@ function MemberDetailContent() {
 
   return (
     <main className="page">
-      {/* Hero Section: Member基本信息 */}
+      {/* Hero Section: Member */}
       <section className="hero">
         <div className="panel">
           <div className="panelInner">
+            {/* member details */}
             <span className="pill">Member Details</span>
             <h1 className="sectionTitle" style={{ marginTop: 14 }}>
               {member.name}
@@ -290,6 +292,8 @@ function MemberDetailContent() {
  * @param {Object} props.payment - The payment record to edit
  * @param {Function} props.onSave - Callback to save changes (paymentId, paid, notes)
  */
+
+// edit payment
 function PaymentEditor({ payment, onSave }) {
   // Local state for form inputs
   const [notes, setNotes] = useState(payment.notes || "");

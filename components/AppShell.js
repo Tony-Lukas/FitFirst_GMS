@@ -19,7 +19,7 @@ const customerLinks = [
 
 const ownerLinks = [
   { href: "/", label: "Home" },
-  { href: "/plans", label: "Plans" },
+  // { href: "/plans", label: "Plans" },
   { href: "/owner", label: "Owner Hub" },
 ];
 
@@ -39,6 +39,7 @@ export function AppShell({ children }) {
           </Link>
 
           <nav className={styles.nav}>
+            {/* nav bar */}
             {links.map((link) => (
               <Link
                 key={link.href}

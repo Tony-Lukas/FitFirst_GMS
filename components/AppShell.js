@@ -19,7 +19,7 @@ const customerLinks = [
 
 const ownerLinks = [
   { href: "/", label: "Home" },
-  // { href: "/plans", label: "Plans" },
+  { href: "/plans", label: "Plans" },
   { href: "/owner", label: "Owner Hub" },
 ];
 
